@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 
 function PlayerPreview (props) {
     return (
@@ -109,6 +110,7 @@ class Battle extends Component {
       }
 
     render(){
+        let match = this.props.match;
         let playerOneName = this.state.playerOneName;
         let playerTwoName = this.state.playerTwoName;
         let playerOneImage = this.state.playerOneImage;
@@ -116,37 +118,49 @@ class Battle extends Component {
 
 
         return(
-            <div className='row'>
-                {!playerOneName &&
-                    <PlayerInput 
-                        id='playerOne'
-                        label = 'Player One'
-                        onSubmit={this.handleSubmit}
+            <div>
+                <div className='row'>
+                    {!playerOneName &&
+                        <PlayerInput 
+                            id='playerOne'
+                            label = 'Player One'
+                            onSubmit={this.handleSubmit}
+                            />}
+
+                    {playerOneImage !== null &&
+                        <PlayerPreview 
+                            avatar={playerOneImage}
+                            username={playerOneName}
+                            onReset={this.handleReset}
+                            id='playerOne'
                         />}
 
-                {playerOneImage !== null &&
-                    <PlayerPreview 
-                        avatar={playerOneImage}
-                        username={playerOneName}
-                        onReset={this.handleReset}
-                        id='playerOne'
-                    />}
+                    {!playerTwoName &&
+                        <PlayerInput 
+                            id='playerTwo' 
+                            label = 'Player Two'
+                            onSubmit={this.handleSubmit}
+                            />}
 
-                {!playerTwoName &&
-                    <PlayerInput 
-                        id='playerTwo' 
-                        label = 'Player Two'
-                        onSubmit={this.handleSubmit}
+                    {playerTwoImage !== null &&
+                        <PlayerPreview 
+                            avatar={playerTwoImage}
+                            username={playerTwoName}
+                            onReset={this.handleReset}
+                            id='playerTwo'
                         />}
+                </div>
 
-                {playerTwoImage !== null &&
-                    <PlayerPreview 
-                        avatar={playerTwoImage}
-                        username={playerTwoName}
-                        onReset={this.handleReset}
-                        id='playerTwo'
-                    />}
-                       
+                {playerOneImage && playerTwoImage && 
+                    <Link
+                        className='button'
+                        to={{
+                            pathname: `${match.url}/results`,
+                            search: `?playerOne=${playerOneName}&playerTwo=${playerTwoName}`
+                        }}>
+                        Battle
+                    </Link>
+                }
             </div>
         )
     }
